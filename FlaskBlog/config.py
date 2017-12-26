@@ -15,6 +15,7 @@ class Config:
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     FLASKY_MAIL_SENDER = os.environ.get('MAIL_USERNAME')
+    FLASKY_ADMIN = "408321492@qq.com"
 
     @staticmethod
     def init_app(app):
