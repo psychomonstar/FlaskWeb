@@ -7,6 +7,13 @@ from .forms import LoginForm, RegistrationForm
 from ..models import User
 from flask_login import login_user, logout_user, login_required, current_user
 
+@auth.before_app_request
+def before_request():
+    if current_user.is_authenticated:
+        current_user.ping()
+        if not current_user.confirmed and request.endpoint[:5]!='auth.':
+            flash("尽快认证账号")
+
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
