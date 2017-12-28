@@ -5,17 +5,20 @@ from wtforms import StringField, SubmitField, TextAreaField, BooleanField, Selec
 from wtforms.validators import DataRequired, Length, Email, Regexp, ValidationError
 
 
-class NameForm(FlaskForm):
-    name = StringField('What is your name?', validators=[DataRequired()])
-    submit = SubmitField('Submit')
 
 class EditProfileForm(FlaskForm):
+    '''
+    个人资料编辑表单
+    '''
     name = StringField('Real name', validators=[Length(0, 64)])
     location = StringField('Location', validators=[Length(0, 64)])
     about_me = TextAreaField('About me')
     submit = SubmitField('Submit')
 
 class EditProfileAdminForm(FlaskForm):
+    '''
+    管理员编辑表单
+    '''
     email = StringField('Email', validators=[DataRequired(), Length(1, 64),
                                              Email()])
     username = StringField('Username', validators=[
@@ -44,3 +47,8 @@ class EditProfileAdminForm(FlaskForm):
         if field.data != self.user.username and \
                 User.query.filter_by(username=field.data).first():
             raise ValidationError('用户名已经被使用.')
+
+class PostForm(FlaskForm):
+    body = TextAreaField("请输入...",validators=[DataRequired()])
+    submit = SubmitField('提交')
+
