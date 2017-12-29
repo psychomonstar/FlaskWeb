@@ -3,7 +3,7 @@ from app.models import Role, User
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, TextAreaField, BooleanField, SelectField
 from wtforms.validators import DataRequired, Length, Email, Regexp, ValidationError
-
+from flask_pagedown.fields import PageDownField
 
 
 class EditProfileForm(FlaskForm):
@@ -49,6 +49,6 @@ class EditProfileAdminForm(FlaskForm):
             raise ValidationError('用户名已经被使用.')
 
 class PostForm(FlaskForm):
-    body = TextAreaField("请输入...",validators=[DataRequired()])
+    body = PageDownField(validators=[DataRequired()])
     submit = SubmitField('提交')
 
