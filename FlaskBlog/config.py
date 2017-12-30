@@ -18,6 +18,7 @@ class Config:
     FLASKY_ADMIN = "408321492@qq.com"
 
     POSTS_PER_PAGE = 10
+    FOLLOWERS_PER_PAGE = 10
 
     @staticmethod
     def init_app(app):
