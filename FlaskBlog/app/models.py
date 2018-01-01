@@ -116,24 +116,38 @@ class User(UserMixin, db.Model):
     followers = db.relationship('Follow', foreign_keys=[Follow.followed_id],
                                 backref=db.backref('followed', lazy='joined'),
                                 lazy='dynamic', cascade='all,delete-orphan')
-    def is_following(self,user):
+
+    def is_following(self, user):
         return self.followed.filter_by(followed_id=user.id).first() is not None
 
-    def is_followed_by(self,user):
+    def is_followed_by(self, user):
         return self.followers.filter_by(follower_id=user.id).first() is not None
 
-    def follow(self,user):
+    def follow(self, user):
         if not self.is_following(user):
-            f=Follow(followed=user,follower=self)
+            f = Follow(followed=user, follower=self)
             db.session.add(f)
 
-    def unfollow(self,user):
+    def unfollow(self, user):
         if self.is_following(user):
             f = self.followed.filter_by(followed_id=user.id).first()
             db.session.delete(f)
 
+    @property
+    def followed_posts(self):
+        return Post.query.join(Follow, Follow.followed_id == Post.author_id).filter(Follow.follower_id == self.id)
+
+    @staticmethod
+    def add_self_follows():
+        for user in User.query.all():
+            if not user.is_following(user):
+                user.follow(user)
+                db.session.add(user)
+                db.session.commit()
+
     def __init__(self, *args, **kwargs):
         super(User, self).__init__(*args, **kwargs)
+        self.follow(self)
         if self.role is None:
             if self.email == current_app.config['FLASKY_ADMIN']:
                 self.role = Role.query.filter_by(permissions=0xff).first()
